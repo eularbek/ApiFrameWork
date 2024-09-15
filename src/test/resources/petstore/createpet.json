@@ -1,0 +1,20 @@
+{
+  "id": 1980,
+  "name": "Mufasa",
+  "status": "Always barking, and playing with kids",
+  "category": {
+    "id": 2231,
+    "name": "Togo"
+  },
+  "photoUrls": [
+    "some dog images",
+    "another images",
+    "one images"
+  ],
+  "tags": [
+    {
+      "id": 551,
+      "name": "Rocky"
+    }
+  ]
+}
