@@ -5,6 +5,7 @@ import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -73,6 +74,58 @@ public class Countries {
 
 
             }
+        }
+
+        @Test
+    public void getCapitalWithGroovy(){
+
+            RestAssured.baseURI ="https://restcountries.com";
+            RestAssured.basePath = "v3.1/all";
+
+            Response response = RestAssured.given().accept(ContentType.JSON).when()
+                    .get()
+                    .then().statusCode(200)
+                    .extract().response();
+
+           List<Object> capital = response.path("find {it.name.common== 'Germany'}.capital");
+            System.out.println(capital);
+
+            //Print out country/countries from continents Africa
+           List<Object> countriesInAfrica = response.path("findAll {it.continents[0] == 'Africa'}.name.common");
+            System.out.println(countriesInAfrica);
+            System.out.println(countriesInAfrica.size());
+
+            String currencyOfCountry = response.path("find {it.name.common == 'Germany'}.currencies.EUR.symbol");
+            System.out.println(currencyOfCountry);
+
+            //Print out all the countries
+            List<Object> allCountries = response.path("findAll {it}.name.common");
+            System.out.println(allCountries);
+
+
+
+        }
+
+        @Test
+    public void validateCountriesEndPoint(){
+
+            RestAssured.baseURI ="https://restcountries.com";
+            RestAssured.basePath = "v3.1/all";
+
+            Response response = RestAssured
+                    .given()
+                    .accept(ContentType.JSON)
+                    .when()
+                    .get()
+                    .then()
+                    .body("find {it.name.common == 'United Kingdom'}.capital", Matchers.hasItem("London"))
+                    .and()
+                    .body("find {it.name.common == 'Germany'}.currencies.EUR.symbol", Matchers.is("€"))
+                    .and()
+                    .body("find {it.name.common == 'United States'}.borders", Matchers.hasItems("CAN", "MEX"))
+                    .statusCode(200)
+                    .extract().response();
+
         }
 
 
